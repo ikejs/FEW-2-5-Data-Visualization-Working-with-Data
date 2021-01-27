@@ -22,7 +22,7 @@
 // Return a number.
 
 function getTotalPassengers(data) {
-	return 0
+	return data.length
 }
 
 // 2 ---------------------------------------------------------------
@@ -31,7 +31,7 @@ function getTotalPassengers(data) {
 // Return a number.
 
 function getSurvivorCount(data) {
-	return 0
+	return data.filter(passenger => passenger.fields.survived === "Yes").length
 }
 
 // 3 ---------------------------------------------------------------
@@ -39,7 +39,7 @@ function getSurvivorCount(data) {
 // Return a number.
 
 function getCasualityCount(data) {
-	return 0
+	return data.filter(passenger => passenger.fields.survived === "No").length
 }
 
 // 4 ---------------------------------------------------------------
@@ -49,7 +49,7 @@ function getCasualityCount(data) {
 // Return a number
 
 function countPassengersInClass(data, pclass) {
-	return 0
+	return data.filter(passenger => passenger.fields.pclass === pclass).length
 }
 
 // 5 ---------------------------------------------------------------
@@ -57,7 +57,11 @@ function countPassengersInClass(data, pclass) {
 // the data and passenger class. Return only passengers  
 
 function getSurvivorCountForClass(data, pclass) {
-	return 0
+	return data.filter(passenger => {
+		if ((passenger.fields.pclass === pclass) && (passenger.fields.survived === "Yes")) {
+			return passenger
+		}
+	}).length;
 }
 
 // 6 ---------------------------------------------------------------
@@ -66,7 +70,11 @@ function getSurvivorCountForClass(data, pclass) {
 // the number of passengers who did not survive for that class. 
 
 function getCasualityCountForClass(data, pclass) {
-	return 0
+	return data.filter(passenger => {
+		if ((passenger.fields.pclass === pclass) && (passenger.fields.survived === "No")) {
+			return passenger
+		}
+	}).length;
 }
 
 // 7 ---------------------------------------------------------------
@@ -74,14 +82,28 @@ function getCasualityCountForClass(data, pclass) {
 // passenger data where the age is missing. 
 
 function getMinAge(data) {
-	return 0
+	const ages = [];
+	// collect all available ages
+	data.map(passenger => {
+		if (passenger.fields.age) ages.push(passenger.fields.age);
+	})
+	// get min in ages array
+	Array.min = (ages) => Math.min.apply(Math, ages);
+	return Array.min(ages);
 }
 
 // 8 ---------------------------------------------------------------
 // Return the age of the oldest passenger. 
 
 function getMaxAge(data) {
-	return 0
+	const ages = [];
+	// collect all available ages
+	data.map(passenger => {
+		if (passenger.fields.age) ages.push(passenger.fields.age);
+	})
+	// get max in ages array
+	Array.max = (ages) => Math.max.apply(Math, ages);
+	return Array.max(ages);
 }
 
 // 9 ---------------------------------------------------------------
@@ -90,7 +112,7 @@ function getMaxAge(data) {
 // or Q. 
 
 function getEmbarkedCount(data, embarked) {
-	return 0
+	return data.filter(passenger => passenger.fields.embarked === embarked).length
 }
 
 // 10 ---------------------------------------------------------------
@@ -98,7 +120,12 @@ function getEmbarkedCount(data, embarked) {
 // for some passengers you'll need to filter this out! 
 
 function getMinFare(data) {
-	return 0
+	const fares = [];
+	// collect all available fares
+	data.map(passenger => fares.push(passenger.fields.fare));
+	// get min in fares array
+	Array.min = (fares) => Math.min.apply(Math, fares);
+	return Array.min(fares);
 }
 
 // 11 ---------------------------------------------------------------
@@ -106,42 +133,47 @@ function getMinFare(data) {
 // passengers are missing data for fare.
 
 function getMaxFare(data) {
-	return 0
+	const fares = [];
+	// collect all available fares
+	data.map(passenger => fares.push(passenger.fields.fare));
+	// get max in fares array
+	Array.max = (fares) => Math.max.apply(Math, fares);
+	return Array.max(fares);
 }
 
 // 12 ---------------------------------------------------------------
 // Return the count of passengers by gender. 
 
 function getPassengersByGender(data, gender) {
-	return 0
+	return data.filter(passenger => passenger.fields.sex === gender).length
 }
 
 // 13 ---------------------------------------------------------------
 // Return the number of passengers who survived by gender. 
 
 function getSurvivorsByGender(data, gender) {
-	return 0
+	return data.filter(passenger => (passenger.fields.sex === gender) && (passenger.fields.survived === "Yes")).length
 }
 
 // 14 ---------------------------------------------------------------
 // Return the number of passengers who did not survived by gender. 
 
 function getCasualitiesByGender(data, gender) {
-	return 0
+	return data.filter(passenger => (passenger.fields.sex === gender) && (passenger.fields.survived === "No")).length
 }
 
 // 15 ---------------------------------------------------------------
 // Return the number of passengers who survived by passenger class.
 
 function getSurvivorsByPClass(data, pclass) {
-	return 0
+	return data.filter(passenger => (passenger.fields.pclass === pclass) && (passenger.fields.survived === "Yes")).length
 }
 
 // 16 ---------------------------------------------------------------
 // Return the number of passengers who survived by passenger class.
 
 function getCasualitiesByPClass(data, pclass) {
-	return 0
+	return data.filter(passenger => (passenger.fields.pclass === pclass) && (passenger.fields.survived === "No")).length
 }
 
 // 17 ---------------------------------------------------------------
@@ -152,7 +184,13 @@ function getCasualitiesByPClass(data, pclass) {
 // function should return: ['S', 'C', 'Q']
 
 function getUniqueValues(data, property) {
-	return 0
+	const values = [];
+
+	data.forEach(passenger => {
+		values.push(passenger["fields"][property])
+	});
+	
+	return Array.from(new Set(values));
 }
 
 // 18 ---------------------------------------------------------------
@@ -168,14 +206,22 @@ function getAllOfField(data, field) {
 // Return the total of all fares paid. 
 
 function getTotalFare(data) {
-	return 0
+	const fares = [];
+	data.forEach(passenger => {
+		fares.push(passenger.fields.fare);
+	});
+	return fares.reduce((a, b) => a + b, 0);
 }
 
 // 20 --------------------------------------------------------------
 // Return the average fare paid.
 
 function getAverageFare(data) {
-	return 0
+	const fares = [];
+	data.forEach(passenger => {
+		fares.push(passenger.fields.fare);
+	});
+	return fares.sort((a, b) => a - b).reduce((a, b) => a + b, 0) / fares.length
 }
 
 // 21 --------------------------------------------------------------
@@ -183,28 +229,47 @@ function getAverageFare(data) {
 // from the minimum and maximum values. 
 
 function getMedianFare(data) {
-	return 0
+	const fares = [];
+	data.forEach(passenger => {
+		fares.push(passenger.fields.fare);
+	});
+	const mid = Math.floor(fares.length / 2);
+  const nums = [...fares].sort((a, b) => a - b);
+  return fares.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 }
 
 // 22 --------------------------------------------------------------
 // Return the average age of all passengers. 
 
 function getAverageAge(data) {
-	return 0
+	const ages = [];
+	data.filter(passenger => passenger.fields.age).forEach(passenger => {
+		ages.push(passenger.fields.age);
+	});
+	return ages.sort((a, b) => a - b).reduce((a, b) => a + b, 0) / ages.length
 }
 
 // 23 --------------------------------------------------------------
 // Return the median age from passengers. 
 
 function getMedianAge(data) {
-	return 0
+	const ages = [];
+	data.filter(passenger=>passenger.fields.age).forEach(passenger => {
+		ages.push(passenger.fields.age);
+	});
+	const mid = Math.floor(ages.length / 2);
+  const nums = [...ages].sort((a, b) => a - b);
+  return ages.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 }
 
 // 24 --------------------------------------------------------------
 // 
 
 function getAverageAgeByGender(data, gender) {
-	return 0
+	const passengersByAge = data.filter(passenger => ((passenger.fields.sex === gender) && (passenger.fields.age)));
+	const averageAge = passengersByAge.reduce((total, next) => total + next.fields.age, 0) / passengersByAge.length;
+
+	return averageAge;
 }
 
 // --------------------------------------------------------------
