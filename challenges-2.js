@@ -25,7 +25,13 @@
 // Or if property = 'age' -> [40, 26, 22, 28, 23, 45, 21, ...]
 
 function getAllValuesForProperty(data, property) {
-	return []
+	const values = [];
+
+	data.forEach(passenger => {
+		values.push(passenger["fields"][property])
+	});
+	
+	return values;
 }
 
 // 2 -------------------------------------------------------------
@@ -33,8 +39,8 @@ function getAllValuesForProperty(data, property) {
 // For example property = 'sex' and value = 'male' returns an 
 // array of all the male passengers [{...}, {...}, {...}, ...]
 
-function filterByProperty(data, property, value) {
-	return []
+function filterByProperty(data, property, value) {	
+	return data.filter(passenger => passenger["fields"][property] === value);
 }
 
 // 3 -------------------------------------------------------------
@@ -43,7 +49,7 @@ function filterByProperty(data, property, value) {
 // given property have been removed
 
 function filterNullForProperty(data, property) {
-	return []
+	return data.filter(passenger => passenger["fields"][property] !== undefined);
 }
 
 // 4 -------------------------------------------------------------
@@ -52,7 +58,12 @@ function filterNullForProperty(data, property) {
 // Return the total of all values for a given property. This
 
 function sumAllProperty(data, property) {
-	return 0
+	const nums = [];
+	data.filter(passenger => passenger["fields"][property] !== undefined)
+		.forEach(passenger => {
+			nums.push(passenger["fields"][property]);
+		});
+	return nums.reduce((a, b) => a + b, 0);
 }
 
 
@@ -67,7 +78,14 @@ function sumAllProperty(data, property) {
 // at Cherbourg, 77 emabrked at Queenstown, and 2 are undedfined
 
 function countAllProperty(data, property) {
-	return {}
+	return data.reduce((acc, p) => {
+		if (acc[p["fields"][property]] === undefined) {
+			acc[p["fields"][property]] = 1
+		} else {
+			acc[p["fields"][property]] += 1
+		}
+		return acc
+	}, {})
 }
 
 
@@ -77,7 +95,15 @@ function countAllProperty(data, property) {
 // of items in each bucket.
 
 function makeHistogram(data, property, step) {
-	return []
+	console.log(data.filter(p => p["fields"][property] !== undefined).reduce((acc, p) => {
+		if (acc[Math.floor(p["fields"][property] / step)] === undefined) {
+			acc[Math.floor(p["fields"][property] / step)] = 1
+		} else {
+			acc[Math.floor(p["fields"][property] / step)] += 1
+		}
+		return acc 
+	}, []))
+	return 0
 }
 
 // 7 ------------------------------------------------------------
