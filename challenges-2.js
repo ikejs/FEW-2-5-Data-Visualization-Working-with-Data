@@ -95,15 +95,16 @@ function countAllProperty(data, property) {
 // of items in each bucket.
 
 function makeHistogram(data, property, step) {
-	console.log(data.filter(p => p["fields"][property] !== undefined).reduce((acc, p) => {
-		if (acc[Math.floor(p["fields"][property] / step)] === undefined) {
-			acc[Math.floor(p["fields"][property] / step)] = 1
+	return data.filter(p => p["fields"][property] !== undefined).reduce((acc, p) => {
+		let num = acc[Math.floor(p["fields"][property] / step)];
+		if (num === undefined) {
+			num = 1
 		} else {
-			acc[Math.floor(p["fields"][property] / step)] += 1
+			num += 1
 		}
-		return acc 
-	}, []))
-	return 0
+		acc[Math.floor(p["fields"][property] / step)] = num;
+		return acc
+	}, [])
 }
 
 // 7 ------------------------------------------------------------
@@ -112,7 +113,13 @@ function makeHistogram(data, property, step) {
 // to divide each value by the maximum value in the array.
 
 function normalizeProperty(data, property) {
-	return []
+	const values = [];
+	data.map(passenger => {
+		if (passenger["fields"][property]) values.push(passenger["fields"][property]);
+	})
+	Array.max = (values) => Math.max.apply(Math, values);
+	const max = Array.max(values);
+	return data.filter(passenger => passenger["fields"][property] !== undefined).map(passenger => passenger["fields"][property] / max);
 }
 
 // --------------------------------------------------------------
